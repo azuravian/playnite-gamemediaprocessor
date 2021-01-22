@@ -69,7 +69,7 @@ function OpenMenu
     # Create window
     $Window = $PlayniteApi.Dialogs.CreateWindow($WindowCreationOptions)
     $Window.Content = $XMLForm
-    $Window.Width = 620
+    $Window.Width = 500
     $Window.Height = 460
     $Window.Title = "Resize Images"
     $Window.WindowStartupLocation = "CenterScreen"
