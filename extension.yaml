@@ -1,10 +1,12 @@
 Id: Resize_Images
 Name: Resize Images
 Author: azuravian
-Version: 1.0
+Version: 1.15
 Module: ResizeImages.ps1
 Type: Script
 Icon: icon.png
 Links:
     - Name: Github
       Url: https://github.com/azuravian/playnite-resizeimages
+    - Name: Forum
+      Url: https://playnite.link/forum/thread-565.html
