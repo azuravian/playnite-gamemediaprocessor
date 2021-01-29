@@ -24,7 +24,7 @@ function OpenMenu
     <Border Margin="40,50,273.6,0" VerticalAlignment="Top" Height="25" Width="180" HorizontalAlignment="Left">
         <TextBlock TextWrapping="Wrap" Text="Game Selection" VerticalAlignment="Center" Width="180"/>
     </Border>
-    <ComboBox Name="CbGameSelection" SelectedIndex="0" HorizontalAlignment="Left" Margin="245,50,0,0" VerticalAlignment="Top" Height="25" Width="200">
+    <ComboBox Name="CbGameSelection" SelectedIndex="1" HorizontalAlignment="Left" Margin="245,50,0,0" VerticalAlignment="Top" Height="25" Width="200">
         <ComboBoxItem Content="All games in database" HorizontalAlignment="Stretch"/>
         <ComboBoxItem Content="Selected Games" HorizontalAlignment="Stretch"/>
     </ComboBox>
@@ -37,19 +37,48 @@ function OpenMenu
         <ComboBoxItem Content="Icon" HorizontalAlignment="Stretch"/>
     </ComboBox>
 	<TabControl Name="ControlTools" HorizontalAlignment="Left" Height="185" Margin="40,143,34.6,44" VerticalAlignment="Top">
-		<TabItem Header="Resolution">
+		<TabItem Header="Resize">
 			<Grid>
 				<TextBlock HorizontalAlignment="Left" Margin="17,20,0,0" TextWrapping="Wrap" Text="Description:" VerticalAlignment="Top" Height="20" FontWeight="Bold"/>
 				<TextBlock HorizontalAlignment="Left" Margin="17,40,0,0" TextWrapping="Wrap" Text="This tool will resize images of the selected type and games.  Set max width and height below.  Images will retain their current aspect ratio." VerticalAlignment="Top" Width="303"/>
-				<TextBox Name="BoxResolutionWidth" HorizontalAlignment="Left" Height="25" Margin="77,119,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="50"/>
+				<TextBox Name="BoxResizeWidth" HorizontalAlignment="Left" Height="25" Margin="77,119,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="50"/>
 				<TextBlock HorizontalAlignment="Left" Margin="17,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="260" Height="20"><Run Text="Enter "/><Run Text="resolution in pixels"/></TextBlock>
-				<TextBox Name="BoxResolutionHeight" HorizontalAlignment="Left" Height="25" Margin="197,119,0,-11.8" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="50"/>
-				<TextBlock HorizontalAlignment="Left" Margin="17,119,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Height="20" Text="Width"/>
-				<TextBlock HorizontalAlignment="Left" Margin="137,119,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Height="20" Text="Height"/>
+				<TextBox Name="BoxResizeHeight" HorizontalAlignment="Left" Height="25" Margin="197,119,0,-11.8" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="50"/>
+				<CheckBox Name="cb1" IsChecked="True" Content="Keep Aspect Ratio" Margin = "257,122,0,-11.8" VerticalAlignment="Top" Height="20"/>
+				<TextBlock HorizontalAlignment="Left" Margin="17,124,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Height="20" Text="Width"/>
+				<TextBlock HorizontalAlignment="Left" Margin="137,124,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Height="20" Text="Height"/>
+			</Grid>
+		</TabItem>
+		<TabItem Header="Resize and Crop">
+			<Grid>
+				<TextBlock HorizontalAlignment="Left" Margin="17,20,0,0" TextWrapping="Wrap" Text="Description:" VerticalAlignment="Top" Height="20" FontWeight="Bold"/>
+				<TextBlock HorizontalAlignment="Left" Margin="17,40,0,0" TextWrapping="Wrap" Text="This tool will resize images of the selected type and games.  Set width and height below.  Images will be cropped to meet the input aspect ratio." VerticalAlignment="Top" Width="303"/>
+				<TextBox Name="BoxCropWidth" HorizontalAlignment="Left" Height="25" Margin="77,119,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="50"/>
+				<TextBlock HorizontalAlignment="Left" Margin="17,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="260" Height="20"><Run Text="Enter "/><Run Text="resolution in pixels"/></TextBlock>
+				<TextBox Name="BoxCropHeight" HorizontalAlignment="Left" Height="25" Margin="197,119,0,-11.8" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="50"/>
+				<TextBox Name="BoxCropGravity" HorizontalAlignment="Left" Height="25" Margin="317,119,0,-11.8" TextWrapping="Wrap" Text="Center" VerticalAlignment="Top" Width="80"/>
+				<TextBlock HorizontalAlignment="Left" Margin="17,124,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Height="20" Text="Width"/>
+				<TextBlock HorizontalAlignment="Left" Margin="137,124,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Height="20" Text="Height"/>
+				<TextBlock HorizontalAlignment="Left" Margin="257,124,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Height="20" Text="Gravity"/>
+			</Grid>
+		</TabItem>
+		<TabItem Header="Grayscale">
+			<Grid>
+				<TextBlock HorizontalAlignment="Left" Margin="17,20,0,0" TextWrapping="Wrap" Text="Description:" VerticalAlignment="Top" Height="20" FontWeight="Bold"/>
+				<TextBlock HorizontalAlignment="Left" Margin="17,40,0,0" TextWrapping="Wrap" Text="This tool will convert selected images to grayscale.  It will save the color images so you can revert later if necessary." VerticalAlignment="Top" Width="303"/>
+			</Grid>
+		</TabItem>
+		<TabItem Header="Colorshift">
+			<Grid>
+				<TextBlock HorizontalAlignment="Left" Margin="17,20,0,0" TextWrapping="Wrap" Text="Description:" VerticalAlignment="Top" Height="20" FontWeight="Bold"/>
+				<TextBlock HorizontalAlignment="Left" Margin="17,40,0,0" TextWrapping="Wrap" Text="This tool will shift colors of images of the selected type and games.  Set the colorshift below.  This must be a number between 0 and 360.  It will save the original images so you can revert later if necessary." VerticalAlignment="Top" Width="303"/>
+				<TextBox Name="BoxColorShift" HorizontalAlignment="Left" Height="25" Margin="77,119,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="50"/>
+				<TextBlock HorizontalAlignment="Left" Margin="17,124,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Height="20" Text="Colorshift"/>
 			</Grid>
 		</TabItem>
 	</TabControl>
-    <Button Content="Update Tags" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="224,357,0,0" Name="ButtonUpdateTags" IsDefault="True"/>
+    <Button Content="Process Images" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="124,357,0,0" Name="ButtonProcessImages" IsDefault="True"/>
+	<Button Content="Revert Images" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="124,357,124,0" Name="ButtonRevertImages" IsDefault="True"/>
 </Grid>
 "@
 
@@ -74,12 +103,13 @@ function OpenMenu
     $Window.Title = "Resize Images"
     $Window.WindowStartupLocation = "CenterScreen"
 
-    # Handler for pressing "Add Tags" button
-    $ButtonUpdateTags.Add_Click(
+    # Handler for pressing "Process Images" button
+    $ButtonProcessImages.Add_Click(
     {
         # Get the variables from the controls
         $GameSelection = $CbGameSelection.SelectedIndex
         $MediaTypeSelection = $CbMediaType.SelectedIndex
+		$ToolSelection = $ControlTools.SelectedIndex
 
         # Set GameDatabase
         switch ($GameSelection) {
@@ -113,32 +143,253 @@ function OpenMenu
         }
 
         # Set Parameters
-        $Width = $BoxResolutionWidth.Text
-        $Height = $BoxResolutionHeight.Text
+		switch ($ToolSelection) {
+			0 { # Tool #0: Resize
+					
+				$__logger.Info("Resize Images - Tool Selection: `"Resize`"")
+				$Width = $BoxResizeWidth.Text
+				$Height = $BoxResizeHeight.Text
 
-		if ( ($Width -match "^\d+$") -and ($Height -match "^\d+$") )
-		{
-			# Set tag Name
-			$TagTitle = "Resolution"
-			$TagDescription = "Resized to $Width`x$height"
-			$TagName = "$TagTitle`: $MediaType`(s) $TagDescription"
-			
-			# Set function to determine tag operation
-			$ToolFunctionName = "ToolImageResolution"
-			$AdditionalOperation = "GetDimensions"
-			$ExtraParameters = @(
-				$Width,
-				$Height
-			)
+				if ( ($Width -match "^\d+$") -and ($Height -match "^\d+$") )
+				{
+					# Set tag Name
+					$TagTitle = "Resize"
+					$TagDescription = "$Width`x$height"
+					$TagName = "$TagTitle`: $MediaType $TagDescription"
+					
+					# Set function to determine tag operation
+					$ToolFunctionName = "ToolResize"
+					$AdditionalOperation = "GetDimensions"
+					$ExtraParameters = @(
+						$Width,
+						$Height
+					)
 
-			# Start Resize Images function
-			$__logger.Info("Resize Images - Starting Function with parameters `"$MediaType, $TagName, $ToolFunctionName, $AdditionalOperation, $ExtraParameters`"")
-			Invoke-ResizeImages $GameDatabase $MediaType $TagName $ToolFunctionName $AdditionalOperation $ExtraParameters
+					# Start Resize Images function
+					$__logger.Info("Resize Images - Starting Function with parameters `"$MediaType, $TagName, $ToolFunctionName, $AdditionalOperation, $ExtraParameters`"")
+					Invoke-ResizeImages $GameDatabase $MediaType $TagName $ToolFunctionName $AdditionalOperation $ExtraParameters
+				}
+				else
+				{
+					$__logger.Info("Resize Images - Invalid Input `"$Width`", `"$Height`"")
+					$PlayniteApi.Dialogs.ShowMessage("Invalid Input in Width and height Input boxes.", "Resize Images");
+				}
+			}
+			1 { # Tool #1: Resize & Crop
+					
+				$__logger.Info("Resize Images - Tool Selection: `"Resize and Crop`"")
+				$Width = $BoxCropWidth.Text
+				$Height = $BoxCropHeight.Text
+				$Gravity = $BoxCropGravity.Text
+				$GravityOptions = @(
+					"Northwest",
+					"North",
+					"Northeast",
+					"East",
+					"Southeast",
+					"South",
+					"Southwest",
+					"West",
+					"Center"
+				)
+
+				if ( ($Width -match "^\d+$") -and ($Height -match "^\d+$") )
+				{
+					# Set tag Name
+					$TagTitle = "Resize and Crop"
+					$TagDescription = "$Width`x$height"
+					$TagName = "$TagTitle`: $MediaType $TagDescription"
+					
+					# Set function to determine tag operation
+					$ToolFunctionName = "ToolResizeCrop"
+					$AdditionalOperation = "GetDimensions"
+					$ExtraParameters = @(
+						$Width,
+						$Height
+					)
+					
+					if ($GravityOptions.Contains($Gravity))
+					{
+						# Start Resize Images function
+						$__logger.Info("Resize Images - Starting Function with parameters `"$MediaType, $TagName, $ToolFunctionName, $AdditionalOperation, $ExtraParameters`"")
+						Invoke-ResizeImages $GameDatabase $MediaType $TagName $ToolFunctionName $AdditionalOperation $ExtraParameters
+					}
+					else
+					{
+						$__Logger.Info("Resize Images - Invalid Input `"$Gravity`"")
+						$PlayniteApi.Dialogs.ShowMessage("Invalid Input in Gravity Input box.", "Resize Images");
+					}
+					
+				}
+				else
+				{
+					$__logger.Info("Resize Images - Invalid Input `"$Width`", `"$Height`"")
+					$PlayniteApi.Dialogs.ShowMessage("Invalid Input in Width and height Input boxes.", "Resize Images");
+				}
+			}
+			2 { # Tool #2: Grayscale
+                
+                $__logger.Info("Resize Images - Tool Selection: `"Grayscale`"")
+                
+                # Set tag Name
+                $TagTitle = "Grayscale"
+                $TagDescription = ""
+                $TagName = "$TagTitle`: $MediaType $TagDescription"
+                
+                # Set function to determine tag operation
+                $ToolFunctionName = "ToolGrayscale"
+				$AdditionalOperation = "GetDimensions"
+				                
+                # Start Resize Images function
+                $__logger.Info("Resize Images - Starting Function with parameters `"$MediaType, $TagName, $ToolFunctionName, $AdditionalOperation`"")
+				Invoke-ResizeImages $GameDatabase $MediaType $TagName $ToolFunctionName $AdditionalOperation
+            }
+			3 { # Tool #3: Colorshift
+					
+				$__logger.Info("Resize Images - Tool Selection: `"Colorshift`"")
+				if ([float]$BoxColorShift.Text -lt 180)
+				{
+					$ColorAngle = ((([float]$BoxColorShift.Text * 100)/180) + 100)
+				}
+				else
+				{
+					$ColorAngle = ((([float]$BoxColorShift.Text * 100)/180) - 100)
+				}
+				$ColorAngle = [math]::Round($ColorAngle,2)
+				
+				if ($ColorAngle -le 200 -and $ColorAngle -ge 0)
+				{
+					# Set tag Name
+					$TagTitle = "Colorshift"
+					$TagDescription = "$ColorAngle"
+					$TagName = "$TagTitle`: $MediaType $TagDescription"
+					
+					# Set function to determine tag operation
+					$ToolFunctionName = "ToolColorShift"
+					$AdditionalOperation = "GetDimensions"
+					$ExtraParameters = @(
+						,$ColorAngle
+					)
+
+					# Start Resize Images function
+					$__logger.Info("Resize Images - Starting Function with parameters `"$MediaType, $TagName, $ToolFunctionName, $AdditionalOperation, $ExtraParameters`"")
+					Invoke-ResizeImages $GameDatabase $MediaType $TagName $ToolFunctionName $AdditionalOperation $ExtraParameters
+				}
+				else
+				{
+					$__logger.Info("Resize Images - Invalid Input `"$Colorshift`"")
+					$PlayniteApi.Dialogs.ShowMessage("Invalid Input in Colorshift Input box.", "Colorshift");
+				}
+			}
 		}
-		else
-		{
-			$__logger.Info("Resize Images - Invalid Input `"$Width`", `"$Height`"")
-			$PlayniteApi.Dialogs.ShowMessage("Invalid Input in Width and height Input boxes.", "Resize Images");
+    })
+	
+	# Handler for pressing "Revert Images" button
+    $ButtonRevertImages.Add_Click(
+    {
+        # Get the variables from the controls
+        $GameSelection = $CbGameSelection.SelectedIndex
+        $MediaTypeSelection = $CbMediaType.SelectedIndex
+		$ToolSelection = $ControlTools.SelectedIndex
+
+        # Set GameDatabase
+        switch ($GameSelection) {
+            0 {
+                $GameDatabase = $PlayniteApi.Database.Games
+                $__logger.Info("Resize Images - Game Selection: `"AllGames`"")
+            }
+            1 {
+                $GameDatabase = $PlayniteApi.MainView.SelectedGames
+                $__logger.Info("Resize Images - Game Selection: `"SelectedGames`"")
+            }
+        }
+
+        # Set Media Type
+        switch ($MediaTypeSelection) {
+            0 { 
+                $MediaType = "Cover"
+                $OptimizedSize = 1
+                $__logger.Info("Resize Images - Media Selection: `"$MediaType`"")
+            }
+            1 {
+                $MediaType = "Background"
+                $OptimizedSize = 4
+                $__logger.Info("Resize Images - Media Selection: `"$MediaType`"")
+            }
+            2 {
+                $MediaType = "Icon"
+                $OptimizedSize = 0.1
+                $__logger.Info("Resize Images - Media Selection: `"$MediaType`"")
+            }
+        }
+
+        # Set Parameters
+		switch ($ToolSelection) {
+			0 { # Tool #0: Resize
+					
+				$__logger.Info("Resize Images - Tool Selection: `"Resize`"")
+				# Set tag Name
+				$TagTitle = "Resize Revert"
+				$TagName = "$TagTitle`: $MediaType $TagDescription"
+				
+				# Set function to determine tag operation
+				$ToolFunctionName = "ToolResizeRevert"
+				$AdditionalOperation = "GetDimensions"
+				
+					# Start Resize Images function
+					$__logger.Info("Resize Images - Starting Function with parameters `"$MediaType, $TagName, $ToolFunctionName, $AdditionalOperation`"")
+					Invoke-RevertImages $GameDatabase $MediaType $TagName $ToolFunctionName $AdditionalOperation
+			}
+			1 { # Tool #1: Resize and Crop
+					
+				$__logger.Info("Resize Images - Tool Selection: `"Resize and Crop`"")
+				# Set tag Name
+				$TagTitle = "Resize and Crop Revert"
+				$TagName = "$TagTitle`: $MediaType $TagDescription"
+				
+				# Set function to determine tag operation
+				$ToolFunctionName = "ToolResizeCropRevert"
+				$AdditionalOperation = "GetDimensions"
+				
+					# Start Resize Images function
+					$__logger.Info("Resize Images - Starting Function with parameters `"$MediaType, $TagName, $ToolFunctionName, $AdditionalOperation`"")
+					Invoke-RevertImages $GameDatabase $MediaType $TagName $ToolFunctionName $AdditionalOperation
+			}
+			2 { # Tool #2: Grayscale
+                
+                $__logger.Info("Resize Images - Tool Selection: `"Grayscale`"")
+                
+                # Set tag Name
+                $TagTitle = "Grayscale Revert"
+                $TagDescription = ""
+                $TagName = "$TagTitle`: $MediaType $TagDescription"
+                
+                # Set function to determine tag operation
+                $ToolFunctionName = "ToolGrayscaleRevert"
+				$AdditionalOperation = "GetDimensions"
+                
+                
+                # Start Resize Images function
+                $__logger.Info("Resize Images - Starting Function with parameters `"$MediaType, $TagName, $ToolFunctionName, $AdditionalOperation`"")
+				Invoke-RevertImages $GameDatabase $MediaType $TagName $ToolFunctionName $AdditionalOperation
+            }
+			3 { # Tool #3: Colorshift
+					
+				$__logger.Info("Resize Images - Tool Selection: `"Colorshift`"")
+				
+				# Set tag Name
+				$TagTitle = "Colorshift"
+				$TagDescription = "$ColorAngle"
+				$TagName = "$TagTitle`: $MediaType $TagDescription"
+				
+				# Set function to determine tag operation
+				$ToolFunctionName = "ToolColorShiftRevert"
+				$AdditionalOperation = "GetDimensions"
+				
+				# Start Resize Images function
+				$__logger.Info("Resize Images - Starting Function with parameters `"$MediaType, $TagName, $ToolFunctionName, $AdditionalOperation`"")
+				Invoke-RevertImages $GameDatabase $MediaType $TagName $ToolFunctionName $AdditionalOperation
+			}
 		}
     })
 
@@ -158,7 +409,20 @@ function Invoke-ResizeImages
         $AdditionalOperation,
         $ExtraParameters
     )
-    
+	
+	$script:ImagesProcessed = 0
+	
+    # Set images files path
+    if ($PlayniteApi.Paths.IsPortable -eq $true)
+    {
+        $__logger.Info("Process Images - Playnite is Portable.")
+        $PathFilesDirectory = Join-Path -Path $PlayniteApi.Paths.ApplicationPath -ChildPath "library\files\"
+    }
+    else
+    {
+        $__logger.Info("Process Images - Playnite is Installed.")
+        $PathFilesDirectory = Join-Path -Path $env:APPDATA -ChildPath "Playnite\library\files\"
+    }
 	# Try to get magick.exe path via registry
     $Key = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, [Microsoft.Win32.RegistryView]::Registry64)
     $RegSubKey =  $Key.OpenSubKey("Software\ImageMagick\Current")
@@ -220,11 +484,14 @@ function Invoke-ResizeImages
     
     foreach ($Game in $GameDatabase) {
         # Get Image File path
-        Get-ImagePath $game $MediaType
-
+		Get-ImagePath $game $MediaType
+		
         # Verify if Image File path was obtained
         if ($ImageFilePath)
         {
+			# Set Revert Path
+			$ImageFileName = Split-Path -leaf $ImageFilePath
+			
             # Remove "No Media" tag
             Remove-TagFromGame $game $tagNoMediaIds
 
@@ -265,23 +532,83 @@ function Invoke-ResizeImages
                 {
                     continue
                 }
-                &$ToolFunctionName $ImageWidth $ImageHeight $ExtraParameters
+				&$ToolFunctionName $ImageWidth $ImageHeight $ExtraParameters				
             }
             else
             {
                 continue
             }
 
-            # Resize Images
-            if ($Operation -eq "Resize")
-            {
-				
-                & "$MagickExecutablePath" mogrify -quiet -resize $Width'x'$Height "$ImageFilePath"
-            }
-            else
-            {
-                continue
-            }
+            # Process Images
+            switch ($Operation) {
+				"Resize" {
+					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Resize" | Join-Path -ChildPath $($game.Id)
+					$RevertFilePath = Join-Path $RevertFolderPath -ChildPath $ImageFileName
+					if (!(Test-Path -Path $RevertFolderPath))
+					{
+						md -Path $RevertFolderPath
+					}
+					if (!(Test-Path -Path $RevertFilePath))
+					{
+						[System.IO.File]::Copy($ImageFilePath, $RevertFilePath)
+					}
+					if ($cb1.IsChecked)
+					{
+						& "$MagickExecutablePath" mogrify -quiet -resize $Width'x'$Height "$ImageFilePath"
+					}
+					else
+					{
+						& "$MagickExecutablePath" mogrify -quiet -resize $Width'x'$Height`! "$ImageFilePath"
+					}
+					
+					$script:ImagesProcessed++
+				}
+				"Grayscale" {
+					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Resize" | Join-Path -ChildPath $($game.Id)
+					$RevertFilePath = Join-Path $RevertFolderPath -ChildPath $ImageFileName
+					if (!(Test-Path -Path $RevertFolderPath))
+					{
+						md -Path $RevertFolderPath
+					}
+					if (!(Test-Path -Path $RevertFilePath))
+					{
+						[System.IO.File]::Copy($ImageFilePath, $RevertFilePath)
+					}
+					& "$MagickExecutablePath" mogrify -quiet -grayscale Rec709Luminance "$ImageFilePath"
+					$script:ImagesProcessed++
+				}
+				"Colorshift" {
+					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Resize" | Join-Path -ChildPath $($game.Id)
+					$RevertFilePath = Join-Path $RevertFolderPath -ChildPath $ImageFileName
+					if (!(Test-Path -Path $RevertFolderPath))
+					{
+						md -Path $RevertFolderPath
+					}
+					if (!(Test-Path -Path $RevertFilePath))
+					{
+						[System.IO.File]::Copy($ImageFilePath, $RevertFilePath)
+					}
+					& "$MagickExecutablePath" mogrify -quiet -modulate 100,100,$ColorAngle "$ImageFilePath"
+					$script:ImagesProcessed++
+				}
+				"ResizeCrop" {
+					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Resize" | Join-Path -ChildPath $($game.Id)
+					$RevertFilePath = Join-Path $RevertFolderPath -ChildPath $ImageFileName
+					if (!(Test-Path -Path $RevertFolderPath))
+					{
+						md -Path $RevertFolderPath
+					}
+					if (!(Test-Path -Path $RevertFilePath))
+					{
+						[System.IO.File]::Copy($ImageFilePath, $RevertFilePath)
+					}
+					#$newaspect = $width / $height
+					$newaspect = "$width`:$height"
+					& "$MagickExecutablePath" mogrify -gravity $Gravity -extent $newaspect "$ImageFilePath"
+					& "$MagickExecutablePath" mogrify -quiet -resize $Width'x'$Height "$ImageFilePath"
+					$script:ImagesProcessed++
+				}
+			}
         }
         else
         {
@@ -308,7 +635,8 @@ function Invoke-ResizeImages
         $__logger.Info("Resize Images - Games with tool tag `"$TagName`" at finish: Selection $($GamesToolTagSelection.Count), All $($GamesToolTagAll.Count)")
 
         # Add information to results
-        $Results += "`n`n$TagName"
+        $Results += "`n`n$TagName`n`nImages Processed: $script:ImagesProcessed"
+		
         
         # Remove tool tag from database if 0 games have it
         if (($GamesToolTagAll.count -eq 0) -and ($GamesToolTagSelection.count -eq 0))
@@ -318,9 +646,178 @@ function Invoke-ResizeImages
         }
     }
 
-    # Show Results
+	# Show Results
     $__logger.Info("Resize Images - $($Results -replace "`n", ', ')")
     $PlayniteApi.Dialogs.ShowMessage("$Results", "Resize Images");
+}
+
+function Invoke-RevertImages
+{
+    param (
+        $GameDatabase, 
+        $MediaType,
+        $TagName,
+        $ToolFunctionName,
+        $AdditionalOperation,
+        $ExtraParameters
+    )
+	
+	# Set Counters
+	$script:ImagesProcessed = 0
+	
+    # Set images files path
+    if ($PlayniteApi.Paths.IsPortable -eq $true)
+    {
+        $__logger.Info("Process Images - Playnite is Portable.")
+        $PathFilesDirectory = Join-Path -Path $PlayniteApi.Paths.ApplicationPath -ChildPath "library\files\"
+    }
+    else
+    {
+        $__logger.Info("Process Images - Playnite is Installed.")
+        $PathFilesDirectory = Join-Path -Path $env:APPDATA -ChildPath "Playnite\library\files\"
+    }
+	
+    # Create "No Media" tag
+    $tagNoMediaName = "No Media: " + "$MediaType"
+    $tagNoMedia = $PlayniteApi.Database.tags.Add($tagNoMediaName)
+    $global:tagNoMediaIds = $tagNoMedia.Id
+
+    # Create Tool tag
+    if ($TagName)
+    {
+        $tagMatch = $PlayniteApi.Database.tags.Add($TagName)
+        $global:ToolTagId = $tagMatch.Id
+    }
+    
+    foreach ($Game in $GameDatabase) {
+        # Get Image File path
+        Get-ImagePath $game $MediaType
+		
+        # Verify if Image File path was obtained
+        if ($ImageFilePath)
+        {
+			# Set Image Filename
+			$ImageFileName = Split-Path -leaf $ImageFilePath
+			
+            # Remove "No Media" tag
+            Remove-TagFromGame $game $tagNoMediaIds
+
+            # Skip Game if media is of URL type
+            if ($ImageFilePath -match "https?:\/\/")
+            {
+                continue
+            }
+            
+            # Skip game if file path doesn't exist and delete property value
+            if ([System.IO.File]::Exists($ImageFilePath) -eq $false)
+            {
+                if ($MediaType -eq "Cover")
+                {
+                    $game.CoverImage = $null
+                    
+                }
+                elseif ($MediaType -eq "Background")
+                {
+                    $game.BackgroundImage = $null
+                }
+                elseif ($MediaType -eq "Icon")
+                {
+                    $game.Icon = $null
+                }
+                $__logger.Info("Resize Images - `"$($game.name)`" $MediaType doesn't exist in pointed path. Property value deleted.")
+                continue
+            }
+			
+			# Determine Tag Operation
+            if ($AdditionalOperation -eq "GetDimensions")
+            {
+                $global:ImageSuccess = $false
+                Get-ImageDimensions $ImageFilePath
+				
+                # Skip if couldn't get image information
+                if ($ImageSuccess -eq $false)
+                {
+                    continue
+                }
+                &$ToolFunctionName $ImageWidth $ImageHeight $ExtraParameters
+            }
+            else
+            {
+                continue
+            }
+
+            # Process Images
+			switch ($Operation) {
+				"Resize" {
+					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Resize" | Join-Path -ChildPath $($game.Id)
+					$RevertFilePath = Join-Path $RevertFolderPath -ChildPath $ImageFileName
+					if (Test-Path -Path $RevertFilePath)
+					{
+						[System.IO.File]::Delete($ImageFilePath)
+						[System.IO.File]::Move($RevertFilePath, $ImageFilePath)
+						$script:ImagesProcessed++
+					}
+				}
+				"Grayscale" {
+					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Resize" | Join-Path -ChildPath $($game.Id)
+					$RevertFilePath = Join-Path $RevertFolderPath -ChildPath $ImageFileName
+					if (Test-Path -Path $RevertFilePath)
+					{
+						[System.IO.File]::Delete($ImageFilePath)
+						[System.IO.File]::Move($RevertFilePath, $ImageFilePath)
+						$script:ImagesProcessed++
+					}
+				}
+				"Colorshift" {
+					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Resize" | Join-Path -ChildPath $($game.Id)
+					$RevertFilePath = Join-Path $RevertFolderPath -ChildPath $ImageFileName
+					if (Test-Path -Path $RevertFilePath)
+					{
+						[System.IO.File]::Delete($ImageFilePath)
+						[System.IO.File]::Move($RevertFilePath, $ImageFilePath)
+						$script:ImagesProcessed++
+					}
+				}
+				"ResizeCrop" {
+					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Resize" | Join-Path -ChildPath $($game.Id)
+					$RevertFilePath = Join-Path $RevertFolderPath -ChildPath $ImageFileName
+					if (Test-Path -Path $RevertFilePath)
+					{
+						[System.IO.File]::Delete($ImageFilePath)
+						[System.IO.File]::Move($RevertFilePath, $ImageFilePath)
+						$script:ImagesProcessed++
+					}
+				}
+			}
+        }
+        else
+        {
+            # Add "No Media Tag"
+            Add-TagToGame $game $tagNoMediaIds
+        }
+    }
+	
+    # Get information of tool Tag
+    if ($TagName)
+    {
+        $GamesToolTagSelection = $GameDatabase | Where-Object {$_.TagIds -contains $ToolTagId.Guid}
+        $GamesToolTagAll = $PlayniteApi.Database.Games | Where-Object {$_.TagIds -contains $ToolTagId.Guid}
+        $__logger.Info("Resize Images - Games with tool tag `"$TagName`" at finish: Selection $($GamesToolTagSelection.Count), All $($GamesToolTagAll.Count)")
+
+        # Add information to results
+        $Results += "$TagName`n`nImages Selected: $($GameDatabase.count)`n`nImages Processed: $script:ImagesProcessed"
+		
+        # Remove tool tag from database if 0 games have it
+        if (($GamesToolTagAll.count -eq 0) -and ($GamesToolTagSelection.count -eq 0))
+        {
+            $PlayniteApi.Database.Tags.Remove($ToolTagId)
+            $__logger.Info("Resize Images - Removed tool tag `"$TagName`" from database")
+        }
+    }
+	
+    # Show Results
+    $__logger.Info("Resize Images - $($Results -replace "`n", ', ')")
+	$PlayniteApi.Dialogs.ShowMessage("$Results", "Resize Images");
 }
 
 function Get-ImageDimensions
@@ -334,7 +831,7 @@ function Get-ImageDimensions
         Add-type -AssemblyName System.Drawing
         $Image = New-Object System.Drawing.Bitmap $ImageFilePath
         $global:ImageHeight = [int]$image.Height
-        $global:imageWidth = [int]$image.Width
+        $global:ImageWidth = [int]$image.Width
         $Image.Dispose()
         $global:ImageSuccess = $true
     } catch {
@@ -411,7 +908,7 @@ function Remove-TagFromGame
     }
 }
 
-function ToolImageResolution
+function ToolResize
 {
     param (
         $ImageWidth,
@@ -419,7 +916,6 @@ function ToolImageResolution
         $ExtraParameters
     )
     
-    # Tool #3: Resolution
     # Get extra parameters
     $Width = [int]$ExtraParameters[0]
     $Height = [int]$ExtraParameters[1]
@@ -433,3 +929,56 @@ function ToolImageResolution
         continue
     }
 }
+
+function ToolResizeCrop
+{
+    param (
+        $ImageWidth,
+        $ImageHeight,
+        $ExtraParameters
+    )
+    
+    # Get extra parameters
+    $Width = [int]$ExtraParameters[0]
+    $Height = [int]$ExtraParameters[1]
+
+    if ( ($Width -le $ImageWidth) -And ($Height -le $ImageHeight) )
+    {
+	    $global:Operation = "ResizeCrop"
+    }
+    else
+    {
+        $__logger.Info("Resize Images - Width and Height must both be larger than current image.  $game.name`"")
+    }
+}
+
+function ToolGrayscale
+{
+	$global:Operation = "Grayscale"
+}
+
+function ToolGrayscaleRevert
+{
+	$global:Operation = "Grayscale"
+}
+
+function ToolResizeRevert
+{
+	$global:Operation = "Resize"
+}
+
+function ToolResizeCropRevert
+{
+	$global:Operation = "ResizeCrop"
+}
+
+function ToolColorShift
+{
+	$global:Operation = "Colorshift"
+}
+
+function ToolColorShiftRevert
+{
+	$global:Operation = "Colorshift"
+}
+
