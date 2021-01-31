@@ -62,6 +62,12 @@ function OpenMenu
 				<TextBlock HorizontalAlignment="Left" Margin="257,124,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Height="20" Text="Gravity"/>
 			</Grid>
 		</TabItem>
+		<TabItem Header="Flip">
+			<Grid>
+				<TextBlock HorizontalAlignment="Left" Margin="17,20,0,0" TextWrapping="Wrap" Text="Description:" VerticalAlignment="Top" Height="20" FontWeight="Bold"/>
+				<TextBlock HorizontalAlignment="Left" Margin="17,40,0,0" TextWrapping="Wrap" Text="This tool will Flip the image along the horizontal access.  It will save the original images so you can revert later if necessary." VerticalAlignment="Top" Width="303"/>
+			</Grid>
+		</TabItem>
 		<TabItem Header="Grayscale">
 			<Grid>
 				<TextBlock HorizontalAlignment="Left" Margin="17,20,0,0" TextWrapping="Wrap" Text="Description:" VerticalAlignment="Top" Height="20" FontWeight="Bold"/>
@@ -227,7 +233,24 @@ function OpenMenu
 					$PlayniteApi.Dialogs.ShowMessage("Invalid Input in Width and height Input boxes.", "Resize Images");
 				}
 			}
-			2 { # Tool #2: Grayscale
+			2 { # Tool #2: Flip
+                
+                $__logger.Info("Resize Images - Tool Selection: `"Flip`"")
+                
+                # Set tag Name
+                $TagTitle = "Flip"
+                $TagDescription = ""
+                $TagName = "$TagTitle`: $MediaType $TagDescription"
+                
+                # Set function to determine tag operation
+                $ToolFunctionName = "ToolFlip"
+				$AdditionalOperation = "GetDimensions"
+				                
+                # Start Resize Images function
+                $__logger.Info("Resize Images - Starting Function with parameters `"$MediaType, $TagName, $ToolFunctionName, $AdditionalOperation`"")
+				Invoke-ResizeImages $GameDatabase $MediaType $TagName $ToolFunctionName $AdditionalOperation
+            }
+			3 { # Tool #3: Grayscale
                 
                 $__logger.Info("Resize Images - Tool Selection: `"Grayscale`"")
                 
@@ -244,7 +267,7 @@ function OpenMenu
                 $__logger.Info("Resize Images - Starting Function with parameters `"$MediaType, $TagName, $ToolFunctionName, $AdditionalOperation`"")
 				Invoke-ResizeImages $GameDatabase $MediaType $TagName $ToolFunctionName $AdditionalOperation
             }
-			3 { # Tool #3: Colorshift
+			4 { # Tool #4: Colorshift
 					
 				$__logger.Info("Resize Images - Tool Selection: `"Colorshift`"")
 				if ([float]$BoxColorShift.Text -lt 180)
@@ -355,7 +378,25 @@ function OpenMenu
 					$__logger.Info("Resize Images - Starting Function with parameters `"$MediaType, $TagName, $ToolFunctionName, $AdditionalOperation`"")
 					Invoke-RevertImages $GameDatabase $MediaType $TagName $ToolFunctionName $AdditionalOperation
 			}
-			2 { # Tool #2: Grayscale
+			2 { # Tool #2: Flip
+                
+                $__logger.Info("Resize Images - Tool Selection: `"Flip`"")
+                
+                # Set tag Name
+                $TagTitle = "Flip Revert"
+                $TagDescription = ""
+                $TagName = "$TagTitle`: $MediaType $TagDescription"
+                
+                # Set function to determine tag operation
+                $ToolFunctionName = "ToolFlipRevert"
+				$AdditionalOperation = "GetDimensions"
+                
+                
+                # Start Resize Images function
+                $__logger.Info("Resize Images - Starting Function with parameters `"$MediaType, $TagName, $ToolFunctionName, $AdditionalOperation`"")
+				Invoke-RevertImages $GameDatabase $MediaType $TagName $ToolFunctionName $AdditionalOperation
+            }
+			3 { # Tool #3: Grayscale
                 
                 $__logger.Info("Resize Images - Tool Selection: `"Grayscale`"")
                 
@@ -373,7 +414,7 @@ function OpenMenu
                 $__logger.Info("Resize Images - Starting Function with parameters `"$MediaType, $TagName, $ToolFunctionName, $AdditionalOperation`"")
 				Invoke-RevertImages $GameDatabase $MediaType $TagName $ToolFunctionName $AdditionalOperation
             }
-			3 { # Tool #3: Colorshift
+			4 { # Tool #4: Colorshift
 					
 				$__logger.Info("Resize Images - Tool Selection: `"Colorshift`"")
 				
@@ -564,7 +605,7 @@ function Invoke-ResizeImages
 					$script:ImagesProcessed++
 				}
 				"Grayscale" {
-					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Resize" | Join-Path -ChildPath $($game.Id)
+					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Grayscale" | Join-Path -ChildPath $($game.Id)
 					$RevertFilePath = Join-Path $RevertFolderPath -ChildPath $ImageFileName
 					if (!(Test-Path -Path $RevertFolderPath))
 					{
@@ -578,7 +619,7 @@ function Invoke-ResizeImages
 					$script:ImagesProcessed++
 				}
 				"Colorshift" {
-					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Resize" | Join-Path -ChildPath $($game.Id)
+					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Colorshift" | Join-Path -ChildPath $($game.Id)
 					$RevertFilePath = Join-Path $RevertFolderPath -ChildPath $ImageFileName
 					if (!(Test-Path -Path $RevertFolderPath))
 					{
@@ -592,7 +633,7 @@ function Invoke-ResizeImages
 					$script:ImagesProcessed++
 				}
 				"ResizeCrop" {
-					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Resize" | Join-Path -ChildPath $($game.Id)
+					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\ResizeCrop" | Join-Path -ChildPath $($game.Id)
 					$RevertFilePath = Join-Path $RevertFolderPath -ChildPath $ImageFileName
 					if (!(Test-Path -Path $RevertFolderPath))
 					{
@@ -602,10 +643,23 @@ function Invoke-ResizeImages
 					{
 						[System.IO.File]::Copy($ImageFilePath, $RevertFilePath)
 					}
-					#$newaspect = $width / $height
 					$newaspect = "$width`:$height"
 					& "$MagickExecutablePath" mogrify -gravity $Gravity -extent $newaspect "$ImageFilePath"
 					& "$MagickExecutablePath" mogrify -quiet -resize $Width'x'$Height "$ImageFilePath"
+					$script:ImagesProcessed++
+				}
+				"Flip" {
+					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Flip" | Join-Path -ChildPath $($game.Id)
+					$RevertFilePath = Join-Path $RevertFolderPath -ChildPath $ImageFileName
+					if (!(Test-Path -Path $RevertFolderPath))
+					{
+						md -Path $RevertFolderPath
+					}
+					if (!(Test-Path -Path $RevertFilePath))
+					{
+						[System.IO.File]::Copy($ImageFilePath, $RevertFilePath)
+					}
+					& "$MagickExecutablePath" mogrify -flop "$ImageFilePath"
 					$script:ImagesProcessed++
 				}
 			}
@@ -759,7 +813,7 @@ function Invoke-RevertImages
 					}
 				}
 				"Grayscale" {
-					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Resize" | Join-Path -ChildPath $($game.Id)
+					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Grayscale" | Join-Path -ChildPath $($game.Id)
 					$RevertFilePath = Join-Path $RevertFolderPath -ChildPath $ImageFileName
 					if (Test-Path -Path $RevertFilePath)
 					{
@@ -769,7 +823,7 @@ function Invoke-RevertImages
 					}
 				}
 				"Colorshift" {
-					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Resize" | Join-Path -ChildPath $($game.Id)
+					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Colorshift" | Join-Path -ChildPath $($game.Id)
 					$RevertFilePath = Join-Path $RevertFolderPath -ChildPath $ImageFileName
 					if (Test-Path -Path $RevertFilePath)
 					{
@@ -779,7 +833,17 @@ function Invoke-RevertImages
 					}
 				}
 				"ResizeCrop" {
-					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Resize" | Join-Path -ChildPath $($game.Id)
+					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\ResizeCrop" | Join-Path -ChildPath $($game.Id)
+					$RevertFilePath = Join-Path $RevertFolderPath -ChildPath $ImageFileName
+					if (Test-Path -Path $RevertFilePath)
+					{
+						[System.IO.File]::Delete($ImageFilePath)
+						[System.IO.File]::Move($RevertFilePath, $ImageFilePath)
+						$script:ImagesProcessed++
+					}
+				}
+				"Flip" {
+					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Flip" | Join-Path -ChildPath $($game.Id)
 					$RevertFilePath = Join-Path $RevertFolderPath -ChildPath $ImageFileName
 					if (Test-Path -Path $RevertFilePath)
 					{
@@ -982,3 +1046,12 @@ function ToolColorShiftRevert
 	$global:Operation = "Colorshift"
 }
 
+function ToolFlip
+{
+	$global:Operation = "Flip"
+}
+
+function ToolFlipRevert
+{
+	$global:Operation = "Flip"
+}
