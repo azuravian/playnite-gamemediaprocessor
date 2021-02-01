@@ -68,6 +68,14 @@ function OpenMenu
 				<TextBlock HorizontalAlignment="Left" Margin="17,40,0,0" TextWrapping="Wrap" Text="This tool will Flip the image along the horizontal access.  It will save the original images so you can revert later if necessary." VerticalAlignment="Top" Width="303"/>
 			</Grid>
 		</TabItem>
+		<TabItem Header="Fade">
+			<Grid>
+				<TextBlock HorizontalAlignment="Left" Margin="17,20,0,0" TextWrapping="Wrap" Text="Description:" VerticalAlignment="Top" Height="20" FontWeight="Bold"/>
+				<TextBlock HorizontalAlignment="Left" Margin="17,40,0,0" TextWrapping="Wrap" Text="This tool will fade the edges of images of the selected type and games.  Set the level of fade in pixels below.  This must be a whole number greater than 0.  It will save the original images so you can revert later if necessary." VerticalAlignment="Top" Width="363"/>
+				<TextBox Name="BoxFadeEdges" HorizontalAlignment="Left" Height="25" Margin="97,119,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="50"/>
+				<TextBlock HorizontalAlignment="Left" Margin="17,124,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="80" Height="20" Text="Fade Level"/>
+			</Grid>
+		</TabItem>
 		<TabItem Header="Grayscale">
 			<Grid>
 				<TextBlock HorizontalAlignment="Left" Margin="17,20,0,0" TextWrapping="Wrap" Text="Description:" VerticalAlignment="Top" Height="20" FontWeight="Bold"/>
@@ -77,7 +85,7 @@ function OpenMenu
 		<TabItem Header="Colorshift">
 			<Grid>
 				<TextBlock HorizontalAlignment="Left" Margin="17,20,0,0" TextWrapping="Wrap" Text="Description:" VerticalAlignment="Top" Height="20" FontWeight="Bold"/>
-				<TextBlock HorizontalAlignment="Left" Margin="17,40,0,0" TextWrapping="Wrap" Text="This tool will shift colors of images of the selected type and games.  Set the colorshift below.  This must be a number between 0 and 360.  It will save the original images so you can revert later if necessary." VerticalAlignment="Top" Width="303"/>
+				<TextBlock HorizontalAlignment="Left" Margin="17,40,0,0" TextWrapping="Wrap" Text="This tool will shift colors of images of the selected type and games.  Set the colorshift below.  This must be a number between 0 and 360.  It will save the original images so you can revert later if necessary." VerticalAlignment="Top" Width="363"/>
 				<TextBox Name="BoxColorShift" HorizontalAlignment="Left" Height="25" Margin="77,119,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="50"/>
 				<TextBlock HorizontalAlignment="Left" Margin="17,124,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Height="20" Text="Colorshift"/>
 			</Grid>
@@ -250,7 +258,36 @@ function OpenMenu
                 $__logger.Info("Resize Images - Starting Function with parameters `"$MediaType, $TagName, $ToolFunctionName, $AdditionalOperation`"")
 				Invoke-ResizeImages $GameDatabase $MediaType $TagName $ToolFunctionName $AdditionalOperation
             }
-			3 { # Tool #3: Grayscale
+			3 { # Tool #3: Fade
+					
+				$__logger.Info("Resize Images - Tool Selection: `"Fade`"")
+				$FadeLevel = $BoxFadeEdges.Text
+				
+				if (($FadeLevel -match "^\d+$") -and ([int]$FadeLevel -gt 0))
+				{
+					# Set tag Name
+					$TagTitle = "Fade"
+					$TagDescription = "$FadeLevel"
+					$TagName = "$TagTitle`: $MediaType $TagDescription"
+					
+					# Set function to determine tag operation
+					$ToolFunctionName = "ToolFade"
+					$AdditionalOperation = "GetDimensions"
+					$ExtraParameters = @(
+						$FadeLevel
+					)
+
+					# Start Resize Images function
+					$__logger.Info("Resize Images - Starting Function with parameters `"$MediaType, $TagName, $ToolFunctionName, $AdditionalOperation, $ExtraParameters`"")
+					Invoke-ResizeImages $GameDatabase $MediaType $TagName $ToolFunctionName $AdditionalOperation $ExtraParameters
+				}
+				else
+				{
+					$__logger.Info("Resize Images - Invalid Input `"$FadeLevel`"")
+					$PlayniteApi.Dialogs.ShowMessage("Invalid Input in Fade Level Input box.", "Resize Images");
+				}
+			}
+			4 { # Tool #4: Grayscale
                 
                 $__logger.Info("Resize Images - Tool Selection: `"Grayscale`"")
                 
@@ -267,7 +304,7 @@ function OpenMenu
                 $__logger.Info("Resize Images - Starting Function with parameters `"$MediaType, $TagName, $ToolFunctionName, $AdditionalOperation`"")
 				Invoke-ResizeImages $GameDatabase $MediaType $TagName $ToolFunctionName $AdditionalOperation
             }
-			4 { # Tool #4: Colorshift
+			5 { # Tool #5: Colorshift
 					
 				$__logger.Info("Resize Images - Tool Selection: `"Colorshift`"")
 				if ([float]$BoxColorShift.Text -lt 180)
@@ -396,7 +433,25 @@ function OpenMenu
                 $__logger.Info("Resize Images - Starting Function with parameters `"$MediaType, $TagName, $ToolFunctionName, $AdditionalOperation`"")
 				Invoke-RevertImages $GameDatabase $MediaType $TagName $ToolFunctionName $AdditionalOperation
             }
-			3 { # Tool #3: Grayscale
+			3 { # Tool #3: Fade
+                
+                $__logger.Info("Resize Images - Tool Selection: `"Fade`"")
+                
+                # Set tag Name
+                $TagTitle = "Fade Revert"
+                $TagDescription = ""
+                $TagName = "$TagTitle`: $MediaType $TagDescription"
+                
+                # Set function to determine tag operation
+                $ToolFunctionName = "ToolFadeRevert"
+				$AdditionalOperation = "GetDimensions"
+                
+                
+                # Start Resize Images function
+                $__logger.Info("Resize Images - Starting Function with parameters `"$MediaType, $TagName, $ToolFunctionName, $AdditionalOperation`"")
+				Invoke-RevertImages $GameDatabase $MediaType $TagName $ToolFunctionName $AdditionalOperation
+            }
+			4 { # Tool #4: Grayscale
                 
                 $__logger.Info("Resize Images - Tool Selection: `"Grayscale`"")
                 
@@ -414,7 +469,7 @@ function OpenMenu
                 $__logger.Info("Resize Images - Starting Function with parameters `"$MediaType, $TagName, $ToolFunctionName, $AdditionalOperation`"")
 				Invoke-RevertImages $GameDatabase $MediaType $TagName $ToolFunctionName $AdditionalOperation
             }
-			4 { # Tool #4: Colorshift
+			5 { # Tool #5: Colorshift
 					
 				$__logger.Info("Resize Images - Tool Selection: `"Colorshift`"")
 				
@@ -662,6 +717,20 @@ function Invoke-ResizeImages
 					& "$MagickExecutablePath" mogrify -flop "$ImageFilePath"
 					$script:ImagesProcessed++
 				}
+				"Fade" {
+					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Fade" | Join-Path -ChildPath $($game.Id)
+					$RevertFilePath = Join-Path $RevertFolderPath -ChildPath $ImageFileName
+					if (!(Test-Path -Path $RevertFolderPath))
+					{
+						md -Path $RevertFolderPath
+					}
+					if (!(Test-Path -Path $RevertFilePath))
+					{
+						[System.IO.File]::Copy($ImageFilePath, $RevertFilePath)
+					}
+					& "$MagickExecutablePath" convert "$ImageFilePath" -bordercolor black -fill white `( +clone -colorize 100 -shave $FadeLevel`x$FadeLevel -border $FadeLevel`x$FadeLevel -blur $FadeLevel`x$FadeLevel `) -alpha Off -compose copyopacity -composite "$ImageFilePath"
+					$script:ImagesProcessed++
+				}
 			}
         }
         else
@@ -844,6 +913,16 @@ function Invoke-RevertImages
 				}
 				"Flip" {
 					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Flip" | Join-Path -ChildPath $($game.Id)
+					$RevertFilePath = Join-Path $RevertFolderPath -ChildPath $ImageFileName
+					if (Test-Path -Path $RevertFilePath)
+					{
+						[System.IO.File]::Delete($ImageFilePath)
+						[System.IO.File]::Move($RevertFilePath, $ImageFilePath)
+						$script:ImagesProcessed++
+					}
+				}
+				"Fade" {
+					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Fade" | Join-Path -ChildPath $($game.Id)
 					$RevertFilePath = Join-Path $RevertFolderPath -ChildPath $ImageFileName
 					if (Test-Path -Path $RevertFilePath)
 					{
@@ -1054,4 +1133,14 @@ function ToolFlip
 function ToolFlipRevert
 {
 	$global:Operation = "Flip"
+}
+
+function ToolFade
+{
+	$global:Operation = "Fade"
+}
+
+function ToolFadeRevert
+{
+	$global:Operation = "Fade"
 }
