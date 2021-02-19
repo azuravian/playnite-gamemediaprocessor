@@ -35,8 +35,9 @@ function OpenMenu
         <ComboBoxItem Content="Cover Image" HorizontalAlignment="Stretch"/>
         <ComboBoxItem Content="Background Image" HorizontalAlignment="Stretch"/>
         <ComboBoxItem Content="Icon" HorizontalAlignment="Stretch"/>
+		<ComboBoxItem Content="Logo" HorizontalAlignment="Stretch"/>
     </ComboBox>
-	<TabControl Name="ControlTools" HorizontalAlignment="Left" Height="185" Margin="40,143,34.6,44" VerticalAlignment="Top">
+	<TabControl Name="ControlTools" HorizontalAlignment="Left" Height="205" Margin="40,143,34.6,44" VerticalAlignment="Top">
 		<TabItem Header="Resize">
 			<Grid>
 				<TextBlock HorizontalAlignment="Left" Margin="17,20,0,0" TextWrapping="Wrap" Text="Description:" VerticalAlignment="Top" Height="20" FontWeight="Bold"/>
@@ -44,7 +45,8 @@ function OpenMenu
 				<TextBox Name="BoxResizeWidth" HorizontalAlignment="Left" Height="25" Margin="77,119,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="50"/>
 				<TextBlock HorizontalAlignment="Left" Margin="17,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="260" Height="20"><Run Text="Enter "/><Run Text="resolution in pixels"/></TextBlock>
 				<TextBox Name="BoxResizeHeight" HorizontalAlignment="Left" Height="25" Margin="197,119,0,-11.8" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="50"/>
-				<CheckBox Name="cb1" IsChecked="True" Content="Keep Aspect Ratio" Margin = "257,122,0,-11.8" VerticalAlignment="Top" Height="20"/>
+				<CheckBox Name="cbkeepaspect" IsChecked="True" Content="Keep Aspect Ratio" Margin = "257,112,0,-11.8" VerticalAlignment="Top" Height="20"/>
+				<CheckBox Name="cbresizeshrink" IsChecked="True" Content="Only Shrink" Margin = "257,137,0,-11.8" VerticalAlignment="Top" Height="20"/>
 				<TextBlock HorizontalAlignment="Left" Margin="17,124,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Height="20" Text="Width"/>
 				<TextBlock HorizontalAlignment="Left" Margin="137,124,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Height="20" Text="Height"/>
 			</Grid>
@@ -60,6 +62,7 @@ function OpenMenu
 				<TextBlock HorizontalAlignment="Left" Margin="17,124,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Height="20" Text="Width"/>
 				<TextBlock HorizontalAlignment="Left" Margin="137,124,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Height="20" Text="Height"/>
 				<TextBlock HorizontalAlignment="Left" Margin="257,124,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Height="20" Text="Gravity"/>
+				<CheckBox Name="cbcropshrink" IsChecked="True" Content="Only Shrink" Margin = "287,152,0,-11.8" VerticalAlignment="Top" Height="20"/>
 			</Grid>
 		</TabItem>
 		<TabItem Header="Flip">
@@ -91,8 +94,8 @@ function OpenMenu
 			</Grid>
 		</TabItem>
 	</TabControl>
-    <Button Content="Process Images" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="124,357,0,0" Name="ButtonProcessImages" IsDefault="True"/>
-	<Button Content="Revert Images" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="124,357,124,0" Name="ButtonRevertImages" IsDefault="True"/>
+    <Button Content="Process Images" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="124,407,0,0" Name="ButtonProcessImages" IsDefault="True"/>
+	<Button Content="Revert Images" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="124,407,124,0" Name="ButtonRevertImages" IsDefault="True"/>
 </Grid>
 "@
 
@@ -113,7 +116,7 @@ function OpenMenu
     $Window = $PlayniteApi.Dialogs.CreateWindow($WindowCreationOptions)
     $Window.Content = $XMLForm
     $Window.Width = 500
-    $Window.Height = 460
+    $Window.Height = 500
     $Window.Title = "Resize Images"
     $Window.WindowStartupLocation = "CenterScreen"
 
@@ -154,6 +157,11 @@ function OpenMenu
                 $OptimizedSize = 0.1
                 $__logger.Info("Resize Images - Media Selection: `"$MediaType`"")
             }
+			3 {
+				$MediaType = "Logo"
+                $OptimizedSize = 0.2
+                $__logger.Info("Resize Images - Media Selection: `"$MediaType`"")
+			}
         }
 
         # Set Parameters
@@ -381,6 +389,11 @@ function OpenMenu
                 $OptimizedSize = 0.1
                 $__logger.Info("Resize Images - Media Selection: `"$MediaType`"")
             }
+			3 {
+                $MediaType = "Logo"
+                $OptimizedSize = 0.2
+                $__logger.Info("Resize Images - Media Selection: `"$MediaType`"")
+            }
         }
 
         # Set Parameters
@@ -512,13 +525,14 @@ function Invoke-ResizeImages
     if ($PlayniteApi.Paths.IsPortable -eq $true)
     {
         $__logger.Info("Process Images - Playnite is Portable.")
-        $PathFilesDirectory = Join-Path -Path $PlayniteApi.Paths.ApplicationPath -ChildPath "library\files\"
+        $PathFilesDirectory = Join-Path - Path $PlayniteApi.Paths.ApplicationPath -ChildPath "library\files\"
     }
     else
     {
         $__logger.Info("Process Images - Playnite is Installed.")
-        $PathFilesDirectory = Join-Path -Path $env:APPDATA -ChildPath "Playnite\library\files\"
+		$PathFilesDirectory = Join-Path -Path $env:APPDATA -ChildPath "Playnite\library\files\"
     }
+	
 	# Try to get magick.exe path via registry
     $Key = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, [Microsoft.Win32.RegistryView]::Registry64)
     $RegSubKey =  $Key.OpenSubKey("Software\ImageMagick\Current")
@@ -585,7 +599,7 @@ function Invoke-ResizeImages
         # Verify if Image File path was obtained
         if ($ImageFilePath)
         {
-			# Set Revert Path
+			# Set Revert File Name
 			$ImageFileName = Split-Path -leaf $ImageFilePath
 			
             # Remove "No Media" tag
@@ -600,7 +614,7 @@ function Invoke-ResizeImages
             # Skip game if file path doesn't exist and delete property value
             if ([System.IO.File]::Exists($ImageFilePath) -eq $false)
             {
-                if ($MediaType -eq "Cover")
+				if ($MediaType -eq "Cover")
                 {
                     $game.CoverImage = $null
                     
@@ -648,7 +662,7 @@ function Invoke-ResizeImages
 					{
 						[System.IO.File]::Copy($ImageFilePath, $RevertFilePath)
 					}
-					if ($cb1.IsChecked)
+					if ($cbkeepaspect.IsChecked)
 					{
 						& "$MagickExecutablePath" mogrify -quiet -resize $Width'x'$Height "$ImageFilePath"
 					}
@@ -792,12 +806,12 @@ function Invoke-RevertImages
     if ($PlayniteApi.Paths.IsPortable -eq $true)
     {
         $__logger.Info("Process Images - Playnite is Portable.")
-        $PathFilesDirectory = Join-Path -Path $PlayniteApi.Paths.ApplicationPath -ChildPath "library\files\"
+        $PathFilesDirectory = Join-Path - Path $PlayniteApi.Paths.ApplicationPath -ChildPath "library\files\"
     }
     else
     {
         $__logger.Info("Process Images - Playnite is Installed.")
-        $PathFilesDirectory = Join-Path -Path $env:APPDATA -ChildPath "Playnite\library\files\"
+		$PathFilesDirectory = Join-Path -Path $env:APPDATA -ChildPath "Playnite\library\files\"
     }
 	
     # Create "No Media" tag
@@ -924,6 +938,7 @@ function Invoke-RevertImages
 				"Fade" {
 					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Fade" | Join-Path -ChildPath $($game.Id)
 					$RevertFilePath = Join-Path $RevertFolderPath -ChildPath $ImageFileName
+					Add-PluginToGame $game "00000000-dbd1-46c6-b5d0-b1ba559d10e4"
 					if (Test-Path -Path $RevertFilePath)
 					{
 						[System.IO.File]::Delete($ImageFilePath)
@@ -1004,6 +1019,10 @@ function Get-ImagePath
     {
         $global:ImageFilePath = $PlayniteApi.Database.GetFullFilePath($game.Icon)
     }
+	elseif ($MediaType -eq "Logo")
+	{
+		$global:ImageFilePath = [System.IO.Path]::Combine($PlayniteApi.Paths.ConfigurationPath, "ExtraMetadata", "games", $game.Id, "Logo.png")
+	}
     else
     {
         $global:ImageFilePath = $null
@@ -1036,6 +1055,23 @@ function Add-TagToGame
     }
 }
 
+function Add-PluginToGame
+{
+    param (
+        $game,
+        $PluginId
+    )
+
+    # Check if game already doesn't have tag
+    if ($game.PluginId -notcontains $PluginId)
+    {
+        $game.PluginId = $PluginId
+        
+		# Update game in database and increase no media count
+        $PlayniteApi.Database.Games.Update($game)
+    }
+}
+
 function Remove-TagFromGame
 {
     param (
@@ -1063,7 +1099,11 @@ function ToolResize
     $Width = [int]$ExtraParameters[0]
     $Height = [int]$ExtraParameters[1]
 
-    if ( ($Width -lt $ImageWidth) -Or ($Height -lt $ImageHeight) )
+    if (!($cbresizeshrink.IsChecked))
+	{
+		$global:Operation = "Resize"
+	}
+	elseif ( ($Width -lt $ImageWidth) -Or ($Height -lt $ImageHeight) )
     {
 	    $global:Operation = "Resize"
     }
@@ -1085,7 +1125,11 @@ function ToolResizeCrop
     $Width = [int]$ExtraParameters[0]
     $Height = [int]$ExtraParameters[1]
 
-    if ( ($Width -le $ImageWidth) -And ($Height -le $ImageHeight) )
+    if (!($cbcropshrink.IsChecked))
+	{
+		$global:Operation = "ResizeCrop"
+	}
+	elseif ( ($Width -le $ImageWidth) -And ($Height -le $ImageHeight) )
     {
 	    $global:Operation = "ResizeCrop"
     }
