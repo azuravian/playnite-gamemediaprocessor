@@ -521,18 +521,6 @@ function Invoke-ResizeImages
 	
 	$script:ImagesProcessed = 0
 	
-    # Set images files path
-    if ($PlayniteApi.Paths.IsPortable -eq $true)
-    {
-        $__logger.Info("Process Images - Playnite is Portable.")
-        $PathFilesDirectory = Join-Path - Path $PlayniteApi.Paths.ApplicationPath -ChildPath "library\files\"
-    }
-    else
-    {
-        $__logger.Info("Process Images - Playnite is Installed.")
-		$PathFilesDirectory = Join-Path -Path $env:APPDATA -ChildPath "Playnite\library\files\"
-    }
-	
 	# Try to get magick.exe path via registry
     $Key = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, [Microsoft.Win32.RegistryView]::Registry64)
     $RegSubKey =  $Key.OpenSubKey("Software\ImageMagick\Current")
@@ -801,18 +789,6 @@ function Invoke-RevertImages
 	
 	# Set Counters
 	$script:ImagesProcessed = 0
-	
-    # Set images files path
-    if ($PlayniteApi.Paths.IsPortable -eq $true)
-    {
-        $__logger.Info("Process Images - Playnite is Portable.")
-        $PathFilesDirectory = Join-Path - Path $PlayniteApi.Paths.ApplicationPath -ChildPath "library\files\"
-    }
-    else
-    {
-        $__logger.Info("Process Images - Playnite is Installed.")
-		$PathFilesDirectory = Join-Path -Path $env:APPDATA -ChildPath "Playnite\library\files\"
-    }
 	
     # Create "No Media" tag
     $tagNoMediaName = "No Media: " + "$MediaType"
