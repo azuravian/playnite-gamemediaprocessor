@@ -1,12 +1,12 @@
 Id: Resize_Images
-Name: Resize Images
+Name: Game Media Processor
 Author: azuravian
-Version: 1.5.1
-Module: ResizeImages.ps1
+Version: 1.8.1
+Module: GameMediaProcessor.ps1
 Type: Script
 Icon: icon.png
 Links:
     - Name: Github
-      Url: https://github.com/azuravian/playnite-resizeimages
+      Url: https://github.com/azuravian/playnite-gamemediaprocessor
     - Name: Forum
       Url: https://playnite.link/forum/thread-565.html
