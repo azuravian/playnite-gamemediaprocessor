@@ -1,2 +1,2 @@
-# playnite-resizeimages
-Extension for Playnite to resize images in your library
+# playnite-gamemediaprocessor
+Extension for Playnite to provide multiple functions for editing images in your library.
