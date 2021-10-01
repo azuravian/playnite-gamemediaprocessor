@@ -1,6 +1,8 @@
-function global:GetMainMenuItems
+function GetMainMenuItems
 {
-    param($menuArgs)
+    param(
+        $getMainMenuItemsArgs
+    )
 
     $menuItem = New-Object Playnite.SDK.Plugins.ScriptMainMenuItem
     $menuItem.FunctionName = "OpenMenu"
@@ -8,6 +10,18 @@ function global:GetMainMenuItems
 	$menuItem.MenuSection = "@Game Media Tools"
 
     return $menuItem
+}
+
+function GetGameMenuItems {
+	param(
+		$menuArgs
+	)
+
+	$menuItem1 = New-Object Playnite.SDK.Plugins.ScriptGameMenuItem
+	$menuItem1.FunctionName = "OpenMenu"
+    $menuItem1.Description = "Open Media Processor"
+   
+	return $menuItem1
 }
 
 function OpenMenu
@@ -61,7 +75,17 @@ function OpenMenu
 				<TextBox Name="BoxCropWidth" HorizontalAlignment="Left" Height="25" Margin="77,119,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="50"/>
 				<TextBlock HorizontalAlignment="Left" Margin="17,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="260" Height="20"><Run Text="Enter "/><Run Text="resolution in pixels"/></TextBlock>
 				<TextBox Name="BoxCropHeight" HorizontalAlignment="Left" Height="25" Margin="197,119,0,-11.8" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="50"/>
-				<TextBox Name="BoxCropGravity" HorizontalAlignment="Left" Height="25" Margin="317,119,0,-11.8" TextWrapping="Wrap" Text="Center" VerticalAlignment="Top" Width="80"/>
+				<ComboBox Name="CbCropGravity" SelectedIndex="0" HorizontalAlignment="Left" Margin="317,119,0,-11.8" VerticalAlignment="Top" Width="200" Height="25">
+					<ComboBoxItem Content="Center" HorizontalAlignment="Stretch"/>
+					<ComboBoxItem Content="North" HorizontalAlignment="Stretch"/>
+					<ComboBoxItem Content="South" HorizontalAlignment="Stretch"/>
+					<ComboBoxItem Content="East" HorizontalAlignment="Stretch"/>
+					<ComboBoxItem Content="West" HorizontalAlignment="Stretch"/>
+					<ComboBoxItem Content="Northeast" HorizontalAlignment="Stretch"/>
+					<ComboBoxItem Content="Northwest" HorizontalAlignment="Stretch"/>
+					<ComboBoxItem Content="Southeast" HorizontalAlignment="Stretch"/>
+					<ComboBoxItem Content="Southwest" HorizontalAlignment="Stretch"/>
+				</ComboBox>
 				<TextBlock HorizontalAlignment="Left" Margin="17,124,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Height="20" Text="Width"/>
 				<TextBlock HorizontalAlignment="Left" Margin="137,124,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Height="20" Text="Height"/>
 				<TextBlock HorizontalAlignment="Left" Margin="257,124,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Height="20" Text="Gravity"/>
@@ -222,19 +246,36 @@ function OpenMenu
 				$__logger.Info("Game Media Processor - Tool Selection: `"Resize and Crop`"")
 				$Width = $BoxCropWidth.Text
 				$Height = $BoxCropHeight.Text
-				$Gravity = $BoxCropGravity.Text
-				$GravityOptions = @(
-					"Northwest",
-					"North",
-					"Northeast",
-					"East",
-					"Southeast",
-					"South",
-					"Southwest",
-					"West",
-					"Center"
-				)
-
+				$GravitySelection = $CbCropGravity.SelectedIndex
+				switch ($GravitySelection) {
+					0 { # 0: Center
+						$Gravity = "Center"
+					}
+					1 { # 1: North
+						$Gravity = "North"
+					}
+					2 { # 2: South
+						$Gravity = "South"
+					}
+					3 { # 3: East
+						$Gravity = "East"
+					}
+					4 { # 4: West
+						$Gravity = "West"
+					}
+					5 { # 5: Northeast
+						$Gravity = "Northeast"
+					}
+					6 { # 6: Northwest
+						$Gravity = "Northwest"
+					}
+					7 { # 7: Southeast
+						$Gravity = "Southeast"
+					}
+					8 { # 8: Southwest
+						$Gravity = "Southwest"
+					}
+				}	
 				if ( ($Width -match "^\d+$") -and ($Height -match "^\d+$") )
 				{
 					# Set tag Name
@@ -250,18 +291,9 @@ function OpenMenu
 						$Height
 					)
 					
-					if ($GravityOptions.Contains($Gravity))
-					{
-						# Start Game Media Processor function
-						$__logger.Info("Game Media Processor - Starting Function with parameters `"$MediaType, $TagName, $ToolFunctionName, $AdditionalOperation, $ExtraParameters`"")
-						Invoke-GameMediaProcessor $GameDatabase $MediaType $TagName $ToolFunctionName $AdditionalOperation $ExtraParameters
-					}
-					else
-					{
-						$__Logger.Info("Game Media Processor - Invalid Input `"$Gravity`"")
-						$PlayniteApi.Dialogs.ShowMessage("Invalid Input in Gravity Input box.", "Game Media Processor");
-					}
-					
+					# Start Game Media Processor function
+					$__logger.Info("Game Media Processor - Starting Function with parameters `"$MediaType, $TagName, $ToolFunctionName, $AdditionalOperation, $ExtraParameters`"")
+					Invoke-GameMediaProcessor $GameDatabase $MediaType $TagName $ToolFunctionName $AdditionalOperation $ExtraParameters
 				}
 				else
 				{
@@ -1346,7 +1378,14 @@ function ToolFadeRevert
 
 function ToolTrim
 {
-	$cmdOutput = & "$MagickExecutablePath" "$ImageFilePath" -format "%[hex:u.p{0,0}]\n" info:
+	try
+	{
+		$cmdOutput = & "$MagickExecutablePath" "$ImageFilePath" -format "%[hex:u.p{0,0}]\n" info:
+	}
+	catch
+	{
+		continue
+	}
 	$lasttwo = $cmdOutput.Substring($cmdOutput.Length - 2)
 	$length = $cmdOutput.Length
 	if ($cbtrimtrans.IsChecked)

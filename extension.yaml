@@ -1,7 +1,7 @@
 Id: Resize_Images
 Name: Game Media Processor
 Author: azuravian
-Version: 1.8.1
+Version: 1.9
 Module: GameMediaProcessor.ps1
 Type: Script
 Icon: icon.png
