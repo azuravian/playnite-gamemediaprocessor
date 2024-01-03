@@ -718,32 +718,32 @@ function Invoke-GameMediaProcessor
             # Determine Tag Operation
             if ($AdditionalOperation -eq "GetDimensions")
             {
-                $global:ImageSuccess = $false
+				$global:ImageSuccess = $false
                 Get-ImageDimensions $ImageFilePath
 
                 # Skip if couldn't get image information
                 if ($ImageSuccess -eq $false)
                 {
-                    continue
+					continue
                 }
-				&$ToolFunctionName $ImageWidth $ImageHeight $ExtraParameters				
+				&$ToolFunctionName $ImageWidth $ImageHeight $ExtraParameters
             }
             else
             {
                 continue
             }
-
-            # Process Images
+			
+			# Process Images
             switch ($Operation) {
 				"Resize" {
 					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Resize" | Join-Path -ChildPath $($game.Id)
 					$RevertFilePath = Join-Path $RevertFolderPath -ChildPath $ImageFileName
-					if (!(Test-Path -Path $RevertFolderPath))
-					{
-						md -Path $RevertFolderPath
-					}
 					if (!($cbnobackup.IsChecked))
 					{
+						if (!(Test-Path -Path $RevertFolderPath))
+						{
+							md -Path $RevertFolderPath
+						}
 						if (!(Test-Path -Path $RevertFilePath))
 						{
 							[System.IO.File]::Copy($ImageFilePath, $RevertFilePath)
@@ -1165,20 +1165,47 @@ function Get-ImageDimensions
     param (
         $ImageFilePath
     )
-
-    # Get image width and height
-    try {
-        Add-type -AssemblyName System.Drawing
-        $Image = New-Object System.Drawing.Bitmap $ImageFilePath
-        $global:ImageHeight = [int]$image.Height
-        $global:ImageWidth = [int]$image.Width
-        $Image.Dispose()
-        $global:ImageSuccess = $true
-    } catch {
-        $global:ImageSuccess = $false
-        $ErrorMessage = $_.Exception.Message
-        $__logger.Error("Game Media Processor - $($game.name): Error `"$ErrorMessage`" when processing image `"$ImageFilePath`"")
-    }
+	
+	if ($ImageFilePath -match '.ico')
+	{
+		try
+		{
+			$icodata = identify $ImageFilePath
+			$icolayers = @()
+			foreach ($line in $icodata)
+			{
+				if ($line -match '\d*x\d*')
+				{
+					$icolayers += $Matches[0].split('x')[0]
+				}
+			}
+			$max = ($icolayers | measure -maximum).maximum
+			$global:ImageHeight = [int]$max
+			$global:ImageWidth = [int]$max
+			$global:ImageSuccess = $true
+		} catch {
+			$global:ImageSuccess = $false
+			$ErrorMessage = $_.Exception.Message
+			$__logger.Error("Game Media Processor - $($game.name): Error `"$ErrorMessage`" when processing image `"$ImageFilePath`"")
+		}
+		
+	}
+	else
+	{
+		# Get image width and height
+		try {
+			Add-type -AssemblyName System.Drawing
+			$Image = New-Object System.Drawing.Bitmap $ImageFilePath
+			$global:ImageHeight = [int]$image.Height
+			$global:ImageWidth = [int]$image.Width
+			$Image.Dispose()
+			$global:ImageSuccess = $true
+		} catch {
+			$global:ImageSuccess = $false
+			$ErrorMessage = $_.Exception.Message
+			$__logger.Error("Game Media Processor - $($game.name): Error `"$ErrorMessage`" when processing image `"$ImageFilePath`"")
+		}
+	}
 }
 
 function Get-ImagePath

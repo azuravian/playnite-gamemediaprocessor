@@ -1,7 +1,7 @@
 Id: Game_Media_Processor
 Name: Game Media Processor
 Author: azuravian
-Version: 1.9.0
+Version: 1.9.5
 Module: GameMediaProcessor.psm1
 Type: Script
 Icon: icon.png
