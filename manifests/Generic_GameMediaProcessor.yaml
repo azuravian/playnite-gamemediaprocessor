@@ -5,4 +5,10 @@ Packages:
     ReleaseDate: 2021-09-09
     PackageUrl: https://github.com/azuravian/playnite-gamemediaprocessor/releases/download/Playnite9/Game_Media_Processor_1_9_0.pext
     Changelog:
-      - Playnite 9 support
+      - Initial Release
+  - Version: 1.9.5
+    RequiredApiVersion: 6.0.0
+    ReleaseDate: 2024-01-03
+    PackageUrl: https://github.com/azuravian/playnite-gamemediaprocessor/releases/download/v1.9.5/Game_Media_Processor_44tk38xjr1y1r_1_9_5.pext
+    Changelog:
+      - Fixed issue with ico files not processing
