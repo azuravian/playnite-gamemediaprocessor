@@ -14,7 +14,7 @@ Packages:
       - Fixed issue with ico files not processing
   - Version: 1.9.6
     RequiredApiVersion: 6.0.0
-    ReleaseDate: 2024-01-03
+    ReleaseDate: 2024-02-01
     PackageUrl: https://github.com/azuravian/playnite-gamemediaprocessor/releases/download/v1.9.6/Game_Media_Processor_44tk38xjr1y1r_1_9_6.pext
     Changelog:
       - Fixed issue with operations repeating themselves on future runs
