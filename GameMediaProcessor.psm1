@@ -12,6 +12,20 @@ function GetMainMenuItems
     return $menuItem1
 }
 
+function GetGameMenuItems
+{
+    param(
+        $getGameMenuItemsArgs
+    )
+
+    $menuItem1 = New-Object Playnite.SDK.Plugins.ScriptGameMenuItem
+    $menuItem1.Description = "Process Game Media"
+	$menuItem1.FunctionName = "OpenMenu"
+    $menuItem1.MenuSection = "@Game Media Tools"
+
+    return $menuItem1
+}
+
 function OpenMenu
 {
 	param(
@@ -107,6 +121,12 @@ function OpenMenu
 				<TextBlock HorizontalAlignment="Left" Margin="17,40,0,0" TextWrapping="Wrap" Text="This tool will shift colors of images of the selected type and games.  Set the colorshift below.  This must be a number between 0 and 360.  It will save the original images so you can revert later if necessary." VerticalAlignment="Top" Width="500"/>
 				<TextBox Name="BoxColorShift" HorizontalAlignment="Left" Height="25" Margin="77,119,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="50"/>
 				<TextBlock HorizontalAlignment="Left" Margin="17,124,0,-11.8" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Height="20" Text="Colorshift"/>
+			</Grid>
+		</TabItem>
+		<TabItem Header="Invert">
+			<Grid>
+				<TextBlock HorizontalAlignment="Left" Margin="17,20,0,0" TextWrapping="Wrap" Text="Description:" VerticalAlignment="Top" Height="20" FontWeight="Bold"/>
+				<TextBlock HorizontalAlignment="Left" Margin="17,40,0,0" TextWrapping="Wrap" Text="This tool will invert the colors of images of the selected type and games.  Set the colorshift below.  This must be a number between 0 and 360.  It will save the original images so you can revert later if necessary." VerticalAlignment="Top" Width="500"/>
 			</Grid>
 		</TabItem>
 	</TabControl>
@@ -394,6 +414,23 @@ function OpenMenu
 					$PlayniteApi.Dialogs.ShowMessage("Invalid Input in Colorshift Input box.", "Colorshift");
 				}
 			}
+			7 { # Tool #7: Invert
+				
+				$__logger.Info("Game Media Processor - Tool Selection: `"Invert`"")
+				
+				# Set tag Name
+				$TagTitle = "Invert"
+				$TagDescription = ""
+				$TagName = "$TagTitle`: $MediaType $TagDescription"
+				
+				# Set function to determine tag operation
+				$ToolFunctionName = "ToolInvert"
+				$AdditionalOperation = "GetDimensions"
+				                
+				# Start Game Media Processor function
+				$__logger.Info("Game Media Processor - Starting Function with parameters `"$MediaType, $TagName, $ToolFunctionName, $AdditionalOperation`"")
+				Invoke-GameMediaProcessor $GameDatabase $MediaType $TagName $ToolFunctionName $AdditionalOperation
+			}
 		}
     })
 	
@@ -557,6 +594,24 @@ function OpenMenu
 				# Set function to determine tag operation
 				$ToolFunctionName = "ToolColorShiftRevert"
 				$AdditionalOperation = "GetDimensions"
+				
+				# Start Game Media Processor function
+				$__logger.Info("Game Media Processor - Starting Function with parameters `"$MediaType, $TagName, $ToolFunctionName, $AdditionalOperation`"")
+				Invoke-RevertImages $GameDatabase $MediaType $TagName $ToolFunctionName $AdditionalOperation
+			}
+			7 { # Tool #7: Invert
+				
+				$__logger.Info("Game Media Processor - Tool Selection: `"Invert`"")
+				
+				# Set tag Name
+				$TagTitle = "Invert Revert"
+				$TagDescription = ""
+				$TagName = "$TagTitle`: $MediaType $TagDescription"
+				
+				# Set function to determine tag operation
+				$ToolFunctionName = "ToolInvertRevert"
+				$AdditionalOperation = "GetDimensions"
+				
 				
 				# Start Game Media Processor function
 				$__logger.Info("Game Media Processor - Starting Function with parameters `"$MediaType, $TagName, $ToolFunctionName, $AdditionalOperation`"")
@@ -817,6 +872,30 @@ function Invoke-GameMediaProcessor
 					try
 					{
 						& "$MagickExecutablePath" mogrify -modulate 100,100,$ColorAngle "$ImageFilePath"
+					}
+					catch
+					{
+						continue
+					}
+					$script:ImagesProcessed++
+				}
+				"Invert" {
+					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Invert" | Join-Path -ChildPath $($game.Id)
+					$RevertFilePath = Join-Path $RevertFolderPath -ChildPath $ImageFileName
+					if (!(Test-Path -Path $RevertFolderPath))
+					{
+						md -Path $RevertFolderPath
+					}
+					if (!($cbnobackup.IsChecked))
+					{
+						if (!(Test-Path -Path $RevertFilePath))
+						{
+							[System.IO.File]::Copy($ImageFilePath, $RevertFilePath)
+						}
+					}
+					try
+					{
+						& "$MagickExecutablePath" mogrify -channel RGB -negate "$ImageFilePath"
 					}
 					catch
 					{
@@ -1089,6 +1168,16 @@ function Invoke-RevertImages
 						$script:ImagesProcessed++
 					}
 				}
+				"Invert" {
+					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\Invert" | Join-Path -ChildPath $($game.Id)
+					$RevertFilePath = Join-Path $RevertFolderPath -ChildPath $ImageFileName
+					if (Test-Path -Path $RevertFilePath)
+					{
+						[System.IO.File]::Delete($ImageFilePath)
+						[System.IO.File]::Move($RevertFilePath, $ImageFilePath)
+						$script:ImagesProcessed++
+					}
+				}
 				"ResizeCrop" {
 					$RevertFolderPath = Join-Path $CurrentExtensionDataPath -ChildPath "ImagesBU\ResizeCrop" | Join-Path -ChildPath $($game.Id)
 					$RevertFilePath = Join-Path $RevertFolderPath -ChildPath $ImageFileName
@@ -1333,6 +1422,16 @@ function ToolColorShift
 function ToolColorShiftRevert
 {
 	$Global:Operation = "Colorshift"
+}
+
+function ToolInvert
+{
+	$Global:Operation = "Invert"
+}
+
+function ToolInvertRevert
+{
+	$Global:Operation = "Invert"
 }
 
 function ToolFlip

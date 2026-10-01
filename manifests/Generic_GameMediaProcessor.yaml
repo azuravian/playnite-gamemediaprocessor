@@ -19,3 +19,9 @@ Packages:
     Changelog:
       - Fixed issue with operations repeating themselves on future runs
       - Fixed issue with transparent images losing their transparency when cropped
+  - Version: 2.0.0
+    RequiredApiVersion: 6.0.0
+    ReleaseDate: 2026-09-30
+    PackageUrl: https://github.com/azuravian/playnite-gamemediaprocessor/releases/download/v2.0.0/Game_Media_Processor_44tk38xjr1y1r_2_0_0.pext
+    Changelog:
+      - Added Invert option
